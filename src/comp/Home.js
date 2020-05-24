@@ -8,7 +8,7 @@ class Home extends React.Component {
     constructor() {
         super();
         this.state = {
-            header: 'Neha',
+            header: 'Neha kakkar',
             person: null ,
             loading: true,
             album: [],
@@ -35,21 +35,40 @@ class Home extends React.Component {
 
       async result(a){
         const url = `https://itunes.apple.com/search?term=${a}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        this.setState({person: data, loading: false});
-        console.log({person: data});
-        this.setState({album: data.results});      
+        fetch(url)
+          .then(res => res.json())
+          .then((data) => {
+            this.setState({
+              person: data, 
+              loading: false,
+              album: data.results
+            });
+          },
+          
+          (error) => {
+            console.log(error)
+          }
+        )
+        console.log(this.state.person);
       }
       music = (a) => {
-        console.log(a);
+        //console.log(a);
         this.setState({sound: a})
       }
 
       render() {
         const results = this.state.album.map(result => 
-          <div style={{width:100, height:100, margin:10, cursor: "pointer" , borderRadius: 50, backgroundImage: `url(${result.artworkUrl100})` }} onClick={this.music.bind(this, result.previewUrl)} ></div>
-       
+          <div style={{width:100, height:100, margin:20, cursor: "pointer" , borderRadius: 50, backgroundImage: `url(${result.artworkUrl100})` }} onClick={this.music.bind(this, result.previewUrl)} >
+            {result ? (
+              <p style={{ marginTop: 100 }}>
+              {
+                (result.trackName).substr(0, 10)
+              }</p>
+            ):(
+              <p>Aman</p>
+            )}
+            
+          </div>
           );
         return (
           <div>
@@ -85,4 +104,3 @@ class Home extends React.Component {
 }
 
 export default Home;
-// 9873194946
